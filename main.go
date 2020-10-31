@@ -15,6 +15,8 @@ type Fella struct {
 	Artists []string
 	// Type defines whether this music fella is an album, ep, or some other type
 	Type string
+	// Artists featured on this music fella
+	FArtists []string
 	// Rdate defines release date, should only be used as a date and not exact time
 	Rdate time.Time
 	// Links define the links to find the music
@@ -54,11 +56,14 @@ func printBoldArtists(artists []string) string {
 	return a
 }
 
+// String prints fella in form of, **artist(s)** - projectName + optional (feat. artists)
 func (f Fella) String() string {
-	if f.Type == "album" {
-		return fmt.Sprintf("%v", printBoldArtists(f.Artists))
+	aa := fmt.Sprintf("%s - %s", printBoldArtists(f.Artists), f.Name)
+	feat := strings.TrimSpace(printArtists(f.FArtists))
+	if feat != "" {
+		aa = fmt.Sprintf("%s (feat. %s)", aa, feat)
 	}
-	return fmt.Sprintf("Name:")
+	return aa
 }
 
 func main() {
