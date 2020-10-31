@@ -17,8 +17,8 @@ type Fella struct {
 	Type string
 	// Artists featured on this music fella
 	FArtists []string
-	// Rdate defines release date, should only be used as a date and not exact time
-	Rdate time.Time
+	// RDate defines release date, should only be used as a date and not exact time
+	RDate time.Time
 	// Links define the links to find the music
 	Links   []string
 	Genre   []string
@@ -69,8 +69,20 @@ func (f Fella) String() string {
 func main() {
 	fmt.Printf("Hello \n")
 	x := read.Reader{}
-	a := [...]string{"hi"}
-	y := fmt.Sprintf("%v", a)
-	fmt.Printf("%v\n", y)
 	x.Read()
+
+	format := "2020-01-01"
+	
+	vbbbDate, _ := time.Parse(format, "2018-12-12")
+	vbbb := Fella{
+		Artists: []string{"clipping."}, 
+		Name: "Visions of Bodies Being Burned",
+		Type: "album",
+		RDate: vbbbDate, 
+		FArtists: []string{"Sickness", "Michael Esposito", "Cam & China", "Greg Stuart..."},
+		Country: "usa",
+		Genre: []string{"rap", "alternative", "harsh noise"},
+		Links: []string{"https://clppng.bandcamp.com/album/visions-of-bodies-being-burned"},
+	}
+	fmt.Println(vbbb)
 }
