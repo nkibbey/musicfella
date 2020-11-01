@@ -26,6 +26,26 @@ type Fella struct {
 	Country string
 }
 
+// String prints fella in form of, **artist(s)** - projectName + optional (feat. artists)
+func (f Fella) String() string {
+	aa := fmt.Sprintf("%s - %s", printBoldArtists(f.Artists), f.Name)
+	feat := strings.TrimSpace(printArtists(f.FArtists))
+	if feat != "" {
+		aa = fmt.Sprintf("%s (feat. %s)", aa, feat)
+	}
+	return aa
+}
+
+// fellasOfType provides new slice composed of only the fellas that match Type provided
+func fellasOfType(fellas []Fella, t string) (tFellas []Fella) {
+	for _, v := range fellas {
+		if v.Type == t {
+			tFellas = append(tFellas, v)
+		}
+	}
+	return
+}
+
 // printArtists prints artists in form of a1, a2, a3 or simply a1
 // this works for any str slice but I wish to keep the artist formatting specific
 // in order to change when desired and not effect others
@@ -57,39 +77,7 @@ func printBoldArtists(artists []string) string {
 	return a
 }
 
-// String prints fella in form of, **artist(s)** - projectName + optional (feat. artists)
-func (f Fella) String() string {
-	aa := fmt.Sprintf("%s - %s", printBoldArtists(f.Artists), f.Name)
-	feat := strings.TrimSpace(printArtists(f.FArtists))
-	if feat != "" {
-		aa = fmt.Sprintf("%s (feat. %s)", aa, feat)
-	}
-	return aa
-}
-
-// func splitAlbumsEpsSongs(f []Fella) (albums []Fella, eps []Fella, songs []Fella) {
-// 	for _, v := range f {
-// 		if v.Type == "album" {
-// 			albums = append(albums, v)
-// 		} else if v.Type == "ep" {
-// 			eps = append(eps, v)
-// 		} else if v.Type == "song" {
-// 			songs = append(songs, v)
-// 		}
-// 	}
-// 	return
-// }
-
-func fellasOfType(fellas []Fella, t string) (tFellas []Fella) {
-	for _, v := range fellas {
-		if v.Type == t {
-			tFellas = append(tFellas, v)
-		}
-	}
-	return
-}
-
-// printGrouping prints Title and each Fella with two new lines of spacing between (none at end)
+// printGrouping string of Title and each Fella with two new lines of spacing between (none at end)
 func printGrouping(f []Fella, title string) string {
 	var g strings.Builder
 	g.WriteString(title)
@@ -101,6 +89,7 @@ func printGrouping(f []Fella, title string) string {
 	return g.String()
 }
 
+// printWeeklyFellas string of albums/eps/songs separated out into sections
 func printWeeklyFellas(f []Fella) string {
 	a, eps, songs := fellasOfType(f, "album"), fellasOfType(f, "ep"), fellasOfType(f, "song")
 	sort.Slice(a, func(i, j int) bool {
@@ -115,19 +104,19 @@ func printWeeklyFellas(f []Fella) string {
 
 	var summary strings.Builder
 	if len(a) > 0 {
-		summary.WriteString(printGrouping(a, "Albums"))
+		summary.WriteString(printGrouping(a, "## Albums"))
 	}
 	if len(eps) > 0 {
 		if summary.Len() != 0 {
 			summary.WriteString("\n\n")
 		}
-		summary.WriteString(printGrouping(eps, "Eps"))
+		summary.WriteString(printGrouping(eps, "## Eps"))
 	}
 	if len(songs) > 0 {
 		if summary.Len() != 0 {
 			summary.WriteString("\n\n")
 		}
-		summary.WriteString(printGrouping(songs, "Songs"))
+		summary.WriteString(printGrouping(songs, "## Songs"))
 	}
 
 	return summary.String()
