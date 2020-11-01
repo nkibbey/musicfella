@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -66,23 +67,93 @@ func (f Fella) String() string {
 	return aa
 }
 
+// func splitAlbumsEpsSongs(f []Fella) (albums []Fella, eps []Fella, songs []Fella) {
+// 	for _, v := range f {
+// 		if v.Type == "album" {
+// 			albums = append(albums, v)
+// 		} else if v.Type == "ep" {
+// 			eps = append(eps, v)
+// 		} else if v.Type == "song" {
+// 			songs = append(songs, v)
+// 		}
+// 	}
+// 	return
+// }
+
+func fellasOfType(fellas []Fella, t string) (tFellas []Fella) {
+	for _, v := range fellas {
+		if v.Type == t {
+			tFellas = append(tFellas, v)
+		}
+	}
+	return
+}
+
+// printGrouping prints Title and each Fella with two new lines of spacing between (none at end)
+func printGrouping(f []Fella, title string) string {
+	var g strings.Builder
+	g.WriteString(title)
+
+	for _, v := range f {
+		g.WriteString(fmt.Sprintf("\n\n%v", v))
+	}
+
+	return g.String()
+}
+
+func printWeeklyFellas(f []Fella) string {
+	a, eps, songs := fellasOfType(f, "album"), fellasOfType(f, "ep"), fellasOfType(f, "song")
+	sort.Slice(a, func(i, j int) bool { return printArtists(a[i].Artists) < printArtists(a[j].Artists) })
+	sort.Slice(eps, func(i, j int) bool { return printArtists(eps[i].Artists) < printArtists(eps[j].Artists) })
+	sort.Slice(songs, func(i, j int) bool { return printArtists(songs[i].Artists) < printArtists(songs[j].Artists) })
+
+	var summary strings.Builder
+	if len(a) > 0 {
+		summary.WriteString(printGrouping(a, "Albums"))
+	}
+	if len(eps) > 0 {
+		if summary.Len() != 0 {
+			summary.WriteString("\n\n")
+		}
+		summary.WriteString(printGrouping(eps, "Eps"))
+	}
+	if len(songs) > 0 {
+		if summary.Len() != 0 {
+			summary.WriteString("\n\n")
+		}
+		summary.WriteString(printGrouping(songs, "Songs"))
+	}
+
+	return summary.String()
+}
+
 func main() {
 	fmt.Printf("Hello \n")
 	x := read.Reader{}
 	x.Read()
 
 	format := "2020-01-01"
-	
+
 	vbbbDate, _ := time.Parse(format, "2018-12-12")
 	vbbb := Fella{
-		Artists: []string{"clipping."}, 
-		Name: "Visions of Bodies Being Burned",
-		Type: "album",
-		RDate: vbbbDate, 
+		Artists:  []string{"clipping."},
+		Name:     "Visions of Bodies Being Burned",
+		Type:     "album",
+		RDate:    vbbbDate,
 		FArtists: []string{"Sickness", "Michael Esposito", "Cam & China", "Greg Stuart..."},
-		Country: "usa",
-		Genre: []string{"rap", "alternative", "harsh noise"},
-		Links: []string{"https://clppng.bandcamp.com/album/visions-of-bodies-being-burned"},
+		Country:  "usa",
+		Genre:    []string{"rap", "alternative", "harsh noise"},
+		Links:    []string{"https://clppng.bandcamp.com/album/visions-of-bodies-being-burned"},
 	}
 	fmt.Println(vbbb)
+
+	fmt.Println(printWeeklyFellas([]Fella{
+		vbbb,
+		vbbb,
+		Fella{
+			Artists: []string{"loona"},
+			Name: "[12:00]",
+			Type: "album",
+		},
+	}))
 }
