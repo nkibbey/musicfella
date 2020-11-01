@@ -103,9 +103,15 @@ func printGrouping(f []Fella, title string) string {
 
 func printWeeklyFellas(f []Fella) string {
 	a, eps, songs := fellasOfType(f, "album"), fellasOfType(f, "ep"), fellasOfType(f, "song")
-	sort.Slice(a, func(i, j int) bool { return printArtists(a[i].Artists) < printArtists(a[j].Artists) })
-	sort.Slice(eps, func(i, j int) bool { return printArtists(eps[i].Artists) < printArtists(eps[j].Artists) })
-	sort.Slice(songs, func(i, j int) bool { return printArtists(songs[i].Artists) < printArtists(songs[j].Artists) })
+	sort.Slice(a, func(i, j int) bool {
+		return strings.ToLower(printArtists(a[i].Artists)) < strings.ToLower(printArtists(a[j].Artists))
+	})
+	sort.Slice(eps, func(i, j int) bool {
+		return strings.ToLower(printArtists(eps[i].Artists)) < strings.ToLower(printArtists(eps[j].Artists))
+	})
+	sort.Slice(songs, func(i, j int) bool {
+		return strings.ToLower(printArtists(songs[i].Artists)) < strings.ToLower(printArtists(songs[j].Artists))
+	})
 
 	var summary strings.Builder
 	if len(a) > 0 {
@@ -152,8 +158,8 @@ func main() {
 		vbbb,
 		Fella{
 			Artists: []string{"loona"},
-			Name: "[12:00]",
-			Type: "album",
+			Name:    "[12:00]",
+			Type:    "album",
 		},
 	}))
 }
