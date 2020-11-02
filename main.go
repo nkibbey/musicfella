@@ -19,9 +19,7 @@ type Fella struct {
 	// Artists featured on this music fella
 	FArtists []string
 	// RDate defines release date, should only be used as a date and not exact time
-	RDate time.Time
-	// Links define the links to find the music
-	Links   []string
+	RDate   time.Time
 	Genre   []string
 	Country string
 }
@@ -138,7 +136,6 @@ func main() {
 		FArtists: []string{"Sickness", "Michael Esposito", "Cam & China", "Greg Stuart..."},
 		Country:  "usa",
 		Genre:    []string{"rap", "alternative", "harsh noise"},
-		Links:    []string{"https://clppng.bandcamp.com/album/visions-of-bodies-being-burned"},
 	}
 	fmt.Println(vbbb)
 
